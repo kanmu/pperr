@@ -33,7 +33,7 @@ func TestFprint(t *testing.T) {
 	pperr.Fprint(&buf, err)
 
 	actual := buf.String()
-	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
@@ -43,9 +43,9 @@ func TestFprint(t *testing.T) {
 	github.com/winebarrel/pperr_test.TestFprint
 		.../pperr_test.go:NN
 	testing.tRunner
-		/usr/local/Cellar/go/...
+		.../go/...:NN
 	runtime.goexit
-		/usr/local/Cellar/go/...
+		.../go/...:NN
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f2
 		.../pperr_test.go:NN
@@ -90,7 +90,7 @@ func TestFprint_Indent(t *testing.T) {
 	pperr.FprintFunc(&buf, err, pperr.NewPrinterWithIndent(">>"))
 
 	actual := buf.String()
-	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
@@ -100,9 +100,9 @@ func TestFprint_Indent(t *testing.T) {
 >>github.com/winebarrel/pperr_test.TestFprint_Indent
 >>>>.../pperr_test.go:NN
 >>testing.tRunner
->>>>/usr/local/Cellar/go/...
+>>>>.../go/...:NN
 >>runtime.goexit
->>>>/usr/local/Cellar/go/...
+>>>>.../go/...:NN
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f2
 >>>>.../pperr_test.go:NN
@@ -124,7 +124,7 @@ func TestSprint(t *testing.T) {
 	err := f1()
 	actual := pperr.Sprint(err)
 
-	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
@@ -134,9 +134,9 @@ func TestSprint(t *testing.T) {
 	github.com/winebarrel/pperr_test.TestSprint
 		.../pperr_test.go:NN
 	testing.tRunner
-		/usr/local/Cellar/go/...
+		.../go/...:NN
 	runtime.goexit
-		/usr/local/Cellar/go/...
+		.../go/...:NN
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f2
 		.../pperr_test.go:NN
@@ -158,7 +158,7 @@ func TestSprintFunc(t *testing.T) {
 	err := f1()
 	actual := pperr.SprintFunc(err, pperr.NewPrinterWithIndent(">>"))
 
-	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
@@ -168,9 +168,9 @@ func TestSprintFunc(t *testing.T) {
 >>github.com/winebarrel/pperr_test.TestSprintFunc
 >>>>.../pperr_test.go:NN
 >>testing.tRunner
->>>>/usr/local/Cellar/go/...
+>>>>.../go/...:NN
 >>runtime.goexit
->>>>/usr/local/Cellar/go/...
+>>>>.../go/...:NN
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f2
 >>>>.../pperr_test.go:NN
