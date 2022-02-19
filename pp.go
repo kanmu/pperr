@@ -2,9 +2,18 @@ package pperr
 
 import (
 	"io"
+	"os"
 
 	"github.com/pkg/errors"
 )
+
+func Print(err error) {
+	Fprint(os.Stdout, err)
+}
+
+func PrintFunc(err error, puts Printer) {
+	FprintFunc(os.Stdout, err, DefaultPrinter)
+}
 
 func Fprint(w io.Writer, err error) {
 	FprintFunc(w, err, DefaultPrinter)

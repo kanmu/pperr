@@ -16,7 +16,7 @@ import (
 
 func main() {
 	err := f1()
-	pperr.Fprint(os.Stderr, err)
+	pperr.Print(err)
 }
 
 func f1() error {
