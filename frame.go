@@ -12,24 +12,12 @@ type Frame struct {
 	Name string
 }
 
-func ExtractFrames(st errors.StackTrace) []*Frame {
-	return ExtractFramesN(st, 0)
-}
+type Frames []*Frame
 
-func ExtractFramesN(st errors.StackTrace, n int) []*Frame {
-	var frames []*Frame
+func ExtractFrames(st errors.StackTrace) Frames {
+	frames := make([]*Frame, 0, len(st))
 
-	if n > 0 {
-		frames = make([]*Frame, 0, n)
-	} else {
-		frames = make([]*Frame, 0, len(st))
-	}
-
-	for i, v := range st {
-		if n > 0 && i >= n {
-			break
-		}
-
+	for _, v := range st {
 		pc := uintptr(v) - 1
 		fn := runtime.FuncForPC(pc)
 		var frm *Frame
@@ -45,4 +33,21 @@ func ExtractFramesN(st errors.StackTrace, n int) []*Frame {
 	}
 
 	return frames
+}
+
+func (frames Frames) Exclude(excludes Frames) Frames {
+	newFrames := Frames{}
+
+L1:
+	for _, f := range frames {
+		for _, e := range excludes {
+			if f.File == e.File && f.Line == e.Line && f.Name == e.Name {
+				break L1
+			}
+		}
+
+		newFrames = append(newFrames, f)
+	}
+
+	return newFrames
 }

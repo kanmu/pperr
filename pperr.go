@@ -34,26 +34,24 @@ func Fprint(w io.Writer, err error) {
 }
 
 func FprintFunc(w io.Writer, err error, puts Printer) {
-	FprintFuncWithLeaf(w, err, puts, nil)
+	fprintFuncWithParent(w, err, puts, nil)
 }
 
-func FprintFuncWithLeaf(w io.Writer, err error, puts Printer, leaf errors.StackTrace) {
+func fprintFuncWithParent(w io.Writer, err error, puts Printer, parent Frames) {
 	if err == nil {
 		return
 	}
 
 	if withStack, ok := err.(interface{ StackTrace() errors.StackTrace }); ok {
-		puts(w, err, withStack.StackTrace(), leaf)
-
-		if leaf == nil {
-			leaf = withStack.StackTrace()
-		}
+		frames := ExtractFrames(withStack.StackTrace())
+		puts(w, err, frames, parent)
+		parent = frames
 
 		if withCause, ok := withStack.(interface{ Unwrap() error }); ok {
 			err = withCause.Unwrap()
 		}
 	} else {
-		puts(w, err, nil, leaf)
+		puts(w, err, nil, parent)
 	}
 
 	withCause, ok := err.(interface{ Unwrap() error })
@@ -62,7 +60,7 @@ func FprintFuncWithLeaf(w io.Writer, err error, puts Printer, leaf errors.StackT
 		return
 	}
 
-	FprintFuncWithLeaf(w, withCause.Unwrap(), puts, leaf)
+	fprintFuncWithParent(w, withCause.Unwrap(), puts, parent)
 }
 
 func CauseType(err error) string {

@@ -17,7 +17,15 @@ func f1(native bool) error {
 }
 
 func f2(native bool) error {
-	return errors.Wrap(f3(native), "from f2()")
+	return errors.Wrap(f21(native), "from f2()")
+}
+
+func f21(native bool) error {
+	return f22(native)
+}
+
+func f22(native bool) error {
+	return f3(native)
 }
 
 func f3(native bool) error {
@@ -55,6 +63,10 @@ func TestFprint(t *testing.T) {
 		.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f3
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f22
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f21
 		.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 	(no stack trace available)
@@ -113,6 +125,10 @@ func TestFprint_Indent(t *testing.T) {
 *errors.withStack: from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f3
 >>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f22
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f21
+>>>>.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 >>(no stack trace available)
 syscall.Errno: no such file or directory
@@ -147,6 +163,10 @@ func TestSprint(t *testing.T) {
 *errors.withStack: from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f3
 		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f22
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f21
+		.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 	(no stack trace available)
 syscall.Errno: no such file or directory
@@ -180,6 +200,10 @@ func TestSprintFunc(t *testing.T) {
 >>>>.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f3
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f22
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f21
 >>>>.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 >>(no stack trace available)

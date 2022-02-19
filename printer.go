@@ -3,24 +3,18 @@ package pperr
 import (
 	"fmt"
 	"io"
-
-	"github.com/pkg/errors"
 )
 
-type Printer func(w io.Writer, err error, st, leaf errors.StackTrace)
+type Printer func(w io.Writer, err error, frames, parent Frames)
 
 var DefaultIndent = "\t"
 
-var DefaultPrinterWithIndent = func(w io.Writer, err error, st, leaf errors.StackTrace, indent string) {
+var DefaultPrinterWithIndent = func(w io.Writer, err error, frames, parent Frames, indent string) {
 	fmt.Fprintf(w, "%T: %s\n", err, err.Error())
 
-	if st != nil {
-		var frames []*Frame
-
-		if leaf == nil {
-			frames = ExtractFrames(st)
-		} else {
-			frames = ExtractFramesN(st, 1)
+	if frames != nil {
+		if parent != nil {
+			frames = frames.Exclude(parent)
 		}
 
 		for _, f := range frames {
@@ -32,12 +26,12 @@ var DefaultPrinterWithIndent = func(w io.Writer, err error, st, leaf errors.Stac
 	}
 }
 
-var DefaultPrinter Printer = func(w io.Writer, err error, st, leaf errors.StackTrace) {
-	DefaultPrinterWithIndent(w, err, st, leaf, DefaultIndent)
+var DefaultPrinter Printer = func(w io.Writer, err error, frames, parent Frames) {
+	DefaultPrinterWithIndent(w, err, frames, parent, DefaultIndent)
 }
 
 func NewPrinterWithIndent(indent string) Printer {
-	return func(w io.Writer, err error, st, leaf errors.StackTrace) {
-		DefaultPrinterWithIndent(w, err, st, leaf, indent)
+	return func(w io.Writer, err error, frames, parent Frames) {
+		DefaultPrinterWithIndent(w, err, frames, parent, indent)
 	}
 }
