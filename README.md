@@ -3,6 +3,7 @@
 Pretty print for [pkg/errors](https://github.com/pkg/errors).
 
 [![Build](https://github.com/winebarrel/pperr/actions/workflows/build.yml/badge.svg)](https://github.com/winebarrel/pperr/actions/workflows/build.yml)
+[![GoDoc](https://godoc.org/github.com/winebarrel/pperr?status.svg)](http://godoc.org/github.com/winebarrel/pperr)
 
 # Usage
 
