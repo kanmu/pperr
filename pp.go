@@ -1,4 +1,4 @@
-package pp
+package pperr
 
 import (
 	"fmt"
