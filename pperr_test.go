@@ -185,3 +185,21 @@ syscall.Errno: no such file or directory
 
 	assert.Equal(expected, actual)
 }
+
+func TestCauseType(t *testing.T) {
+	assert := assert.New(t)
+	err := f1()
+	assert.Equal("*fs.PathError", pperr.CauseType(err))
+}
+
+func TestCauseType_fundamental(t *testing.T) {
+	assert := assert.New(t)
+	err := errors.New("")
+	assert.Equal("*errors.fundamental", pperr.CauseType(err))
+}
+
+func TestCauseType_errorString(t *testing.T) {
+	assert := assert.New(t)
+	err := fmt.Errorf("")
+	assert.Equal("*errors.errorString", pperr.CauseType(err))
+}

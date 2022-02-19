@@ -1,6 +1,7 @@
 package pperr
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -62,4 +63,21 @@ func FprintFuncWithLeaf(w io.Writer, err error, puts Printer, leaf errors.StackT
 	}
 
 	FprintFuncWithLeaf(w, withCause.Unwrap(), puts, leaf)
+}
+
+func CauseType(err error) string {
+	if err == nil {
+		return ""
+	}
+
+	if ws, ok := err.(interface {
+		StackTrace() errors.StackTrace
+		Cause() error
+	}); ok {
+		if cause, ok := ws.Cause().(interface{ Cause() error }); ok {
+			return CauseType(cause.Cause())
+		}
+	}
+
+	return fmt.Sprintf("%T", err)
 }
