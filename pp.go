@@ -3,6 +3,7 @@ package pperr
 import (
 	"io"
 	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -12,7 +13,19 @@ func Print(err error) {
 }
 
 func PrintFunc(err error, puts Printer) {
-	FprintFunc(os.Stdout, err, DefaultPrinter)
+	FprintFunc(os.Stdout, err, puts)
+}
+
+func Sprint(err error) string {
+	var buf strings.Builder
+	Fprint(&buf, err)
+	return buf.String()
+}
+
+func SprintFunc(err error, puts Printer) string {
+	var buf strings.Builder
+	FprintFunc(&buf, err, puts)
+	return buf.String()
 }
 
 func Fprint(w io.Writer, err error) {
