@@ -1,36 +1,10 @@
 package pperr
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/pkg/errors"
 )
-
-type Printer func(w io.Writer, e error, st, leaf errors.StackTrace)
-
-var DefaultIndent = "\t"
-
-var DefaultPrinter Printer = func(w io.Writer, err error, st, leaf errors.StackTrace) {
-	fmt.Fprintf(w, "%T: %s\n", err, err.Error())
-
-	if st != nil {
-		var frames []*Frame
-
-		if leaf == nil {
-			frames = ExtractFrames(st)
-		} else {
-			frames = ExtractFramesN(st, 1)
-		}
-
-		for _, f := range frames {
-			fmt.Fprintln(w, DefaultIndent+f.Name)
-			fmt.Fprintf(w, "%s%s%s:%d\n", DefaultIndent, DefaultIndent, f.File, f.Line)
-		}
-	} else {
-		fmt.Fprintln(w, DefaultIndent+"(no stack trace available)")
-	}
-}
 
 func Fprint(w io.Writer, err error) {
 	FprintFunc(w, err, DefaultPrinter)
