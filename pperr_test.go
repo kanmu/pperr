@@ -34,23 +34,24 @@ func TestFprint(t *testing.T) {
 
 	actual := buf.String()
 	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f1
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 	github.com/winebarrel/pperr_test.TestFprint
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 	testing.tRunner
 		/usr/local/Cellar/go/...
 	runtime.goexit
 		/usr/local/Cellar/go/...
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f2
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f3
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 	(no stack trace available)
 syscall.Errno: no such file or directory
@@ -90,23 +91,24 @@ func TestFprint_Indent(t *testing.T) {
 
 	actual := buf.String()
 	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f1
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 >>github.com/winebarrel/pperr_test.TestFprint_Indent
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 >>testing.tRunner
 >>>>/usr/local/Cellar/go/...
 >>runtime.goexit
 >>>>/usr/local/Cellar/go/...
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f2
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f3
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 >>(no stack trace available)
 syscall.Errno: no such file or directory
@@ -123,23 +125,24 @@ func TestSprint(t *testing.T) {
 	actual := pperr.Sprint(err)
 
 	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f1
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 	github.com/winebarrel/pperr_test.TestSprint
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 	testing.tRunner
 		/usr/local/Cellar/go/...
 	runtime.goexit
 		/usr/local/Cellar/go/...
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f2
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f3
-		/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+		.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 	(no stack trace available)
 syscall.Errno: no such file or directory
@@ -156,23 +159,24 @@ func TestSprintFunc(t *testing.T) {
 	actual := pperr.SprintFunc(err, pperr.NewPrinterWithIndent(">>"))
 
 	actual = regexp.MustCompile(`/usr/local/Cellar/go/.*`).ReplaceAllString(actual, "/usr/local/Cellar/go/...")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f1
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 >>github.com/winebarrel/pperr_test.TestSprintFunc
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 >>testing.tRunner
 >>>>/usr/local/Cellar/go/...
 >>runtime.goexit
 >>>>/usr/local/Cellar/go/...
 *errors.withStack: from f2(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f2
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 *errors.withStack: from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f3
->>>>/Users/sugawara/com/winebarrel/pperr/pp_test.go:NN
+>>>>.../pperr_test.go:NN
 *fs.PathError: open not_found: no such file or directory
 >>(no stack trace available)
 syscall.Errno: no such file or directory
