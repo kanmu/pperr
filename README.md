@@ -2,6 +2,8 @@
 
 Pretty print for [pkg/errors](https://github.com/pkg/errors).
 
+[![Build](https://github.com/winebarrel/pperr/actions/workflows/build.yml/badge.svg)](https://github.com/winebarrel/pperr/actions/workflows/build.yml)
+
 # Usage
 
 ```go
