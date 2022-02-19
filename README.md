@@ -8,7 +8,7 @@ Pretty print for [pkg/errors](https://github.com/pkg/errors).
 # Usage
 
 ```go
-package pp
+package pperr
 
 import (
 	"os"
