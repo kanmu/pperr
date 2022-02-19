@@ -12,24 +12,28 @@ import (
 	"github.com/winebarrel/pperr"
 )
 
-func f1() error {
-	return errors.Wrap(f2(), "from f1()")
+func f1(native bool) error {
+	return errors.Wrap(f2(native), "from f1()")
 }
 
-func f2() error {
-	return errors.Wrap(f3(), "from f2()")
+func f2(native bool) error {
+	return errors.Wrap(f3(native), "from f2()")
 }
 
-func f3() error {
-	_, err := os.Open("not_found")
-	return errors.Wrap(err, "from f3()")
+func f3(native bool) error {
+	if native {
+		_, err := os.Open("not_found")
+		return errors.Wrap(err, "from f3()")
+	} else {
+		return errors.New("from f3()")
+	}
 }
 
 func TestFprint(t *testing.T) {
 	assert := assert.New(t)
 
 	var buf strings.Builder
-	err := f1()
+	err := f1(true)
 	pperr.Fprint(&buf, err)
 
 	actual := buf.String()
@@ -75,7 +79,7 @@ func TestFprint_StandardError(t *testing.T) {
 	assert.Equal(expected, actual)
 }
 
-func TestFprint_Nil(t *testing.T) {
+func TestFprint_nil(t *testing.T) {
 	assert := assert.New(t)
 	var buf strings.Builder
 	pperr.Fprint(&buf, nil)
@@ -86,7 +90,7 @@ func TestFprint_Indent(t *testing.T) {
 	assert := assert.New(t)
 
 	var buf strings.Builder
-	err := f1()
+	err := f1(true)
 	pperr.FprintFunc(&buf, err, pperr.NewPrinterWithIndent(">>"))
 
 	actual := buf.String()
@@ -121,7 +125,7 @@ syscall.Errno: no such file or directory
 func TestSprint(t *testing.T) {
 	assert := assert.New(t)
 
-	err := f1()
+	err := f1(true)
 	actual := pperr.Sprint(err)
 
 	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
@@ -155,7 +159,7 @@ syscall.Errno: no such file or directory
 func TestSprintFunc(t *testing.T) {
 	assert := assert.New(t)
 
-	err := f1()
+	err := f1(true)
 	actual := pperr.SprintFunc(err, pperr.NewPrinterWithIndent(">>"))
 
 	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
@@ -188,13 +192,13 @@ syscall.Errno: no such file or directory
 
 func TestCauseType(t *testing.T) {
 	assert := assert.New(t)
-	err := f1()
+	err := f1(true)
 	assert.Equal("*fs.PathError", pperr.CauseType(err))
 }
 
 func TestCauseType_fundamental(t *testing.T) {
 	assert := assert.New(t)
-	err := errors.New("")
+	err := f1(false)
 	assert.Equal("*errors.fundamental", pperr.CauseType(err))
 }
 
@@ -202,4 +206,9 @@ func TestCauseType_errorString(t *testing.T) {
 	assert := assert.New(t)
 	err := fmt.Errorf("")
 	assert.Equal("*errors.errorString", pperr.CauseType(err))
+}
+
+func TestCauseType_nil(t *testing.T) {
+	assert := assert.New(t)
+	assert.Equal("", pperr.CauseType(nil))
 }
