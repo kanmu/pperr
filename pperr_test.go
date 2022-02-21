@@ -21,7 +21,7 @@ func f2(native bool) error {
 }
 
 func f21(native bool) error {
-	return f22(native)
+	return fmt.Errorf("from 21(): %w", f22(native))
 }
 
 func f22(native bool) error {
@@ -49,7 +49,21 @@ func TestFprint(t *testing.T) {
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
-	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
+	expected := strings.TrimPrefix(`
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+	github.com/winebarrel/pperr_test.f3
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f22
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f21
+		.../pperr_test.go:NN
+*fmt.wrapError: from 21(): from f3(): open not_found: no such file or directory
+*errors.withStack: from f2(): from 21(): from f3(): open not_found: no such file or directory
+	github.com/winebarrel/pperr_test.f2
+		.../pperr_test.go:NN
+*errors.withStack: from f1(): from f2(): from 21(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f1
 		.../pperr_test.go:NN
 	github.com/winebarrel/pperr_test.TestFprint
@@ -58,21 +72,7 @@ func TestFprint(t *testing.T) {
 		.../go/...:NN
 	runtime.goexit
 		.../go/...:NN
-*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f2
-		.../pperr_test.go:NN
-*errors.withStack: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f3
-		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f22
-		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f21
-		.../pperr_test.go:NN
-*fs.PathError: open not_found: no such file or directory
-	(no stack trace available)
-syscall.Errno: no such file or directory
-	(no stack trace available)
-`
+`, "\n")
 
 	assert.Equal(expected, actual)
 }
@@ -85,7 +85,6 @@ func TestFprint_StandardError(t *testing.T) {
 
 	actual := buf.String()
 	expected := `*errors.errorString: standard error
-	(no stack trace available)
 `
 
 	assert.Equal(expected, actual)
@@ -110,7 +109,21 @@ func TestFprint_Indent(t *testing.T) {
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
-	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
+	expected := strings.TrimPrefix(`
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+>>github.com/winebarrel/pperr_test.f3
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f22
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f21
+>>>>.../pperr_test.go:NN
+*fmt.wrapError: from 21(): from f3(): open not_found: no such file or directory
+*errors.withStack: from f2(): from 21(): from f3(): open not_found: no such file or directory
+>>github.com/winebarrel/pperr_test.f2
+>>>>.../pperr_test.go:NN
+*errors.withStack: from f1(): from f2(): from 21(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f1
 >>>>.../pperr_test.go:NN
 >>github.com/winebarrel/pperr_test.TestFprint_Indent
@@ -119,21 +132,7 @@ func TestFprint_Indent(t *testing.T) {
 >>>>.../go/...:NN
 >>runtime.goexit
 >>>>.../go/...:NN
-*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f2
->>>>.../pperr_test.go:NN
-*errors.withStack: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f3
->>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f22
->>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f21
->>>>.../pperr_test.go:NN
-*fs.PathError: open not_found: no such file or directory
->>(no stack trace available)
-syscall.Errno: no such file or directory
->>(no stack trace available)
-`
+`, "\n")
 
 	assert.Equal(expected, actual)
 }
@@ -148,7 +147,21 @@ func TestSprint(t *testing.T) {
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
-	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
+	expected := strings.TrimPrefix(`
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+	github.com/winebarrel/pperr_test.f3
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f22
+		.../pperr_test.go:NN
+	github.com/winebarrel/pperr_test.f21
+		.../pperr_test.go:NN
+*fmt.wrapError: from 21(): from f3(): open not_found: no such file or directory
+*errors.withStack: from f2(): from 21(): from f3(): open not_found: no such file or directory
+	github.com/winebarrel/pperr_test.f2
+		.../pperr_test.go:NN
+*errors.withStack: from f1(): from f2(): from 21(): from f3(): open not_found: no such file or directory
 	github.com/winebarrel/pperr_test.f1
 		.../pperr_test.go:NN
 	github.com/winebarrel/pperr_test.TestSprint
@@ -157,21 +170,7 @@ func TestSprint(t *testing.T) {
 		.../go/...:NN
 	runtime.goexit
 		.../go/...:NN
-*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f2
-		.../pperr_test.go:NN
-*errors.withStack: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f3
-		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f22
-		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f21
-		.../pperr_test.go:NN
-*fs.PathError: open not_found: no such file or directory
-	(no stack trace available)
-syscall.Errno: no such file or directory
-	(no stack trace available)
-`
+`, "\n")
 
 	assert.Equal(expected, actual)
 }
@@ -186,7 +185,21 @@ func TestSprintFunc(t *testing.T) {
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
-	expected := `*errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
+	expected := strings.TrimPrefix(`
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+>>github.com/winebarrel/pperr_test.f3
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f22
+>>>>.../pperr_test.go:NN
+>>github.com/winebarrel/pperr_test.f21
+>>>>.../pperr_test.go:NN
+*fmt.wrapError: from 21(): from f3(): open not_found: no such file or directory
+*errors.withStack: from f2(): from 21(): from f3(): open not_found: no such file or directory
+>>github.com/winebarrel/pperr_test.f2
+>>>>.../pperr_test.go:NN
+*errors.withStack: from f1(): from f2(): from 21(): from f3(): open not_found: no such file or directory
 >>github.com/winebarrel/pperr_test.f1
 >>>>.../pperr_test.go:NN
 >>github.com/winebarrel/pperr_test.TestSprintFunc
@@ -195,21 +208,7 @@ func TestSprintFunc(t *testing.T) {
 >>>>.../go/...:NN
 >>runtime.goexit
 >>>>.../go/...:NN
-*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f2
->>>>.../pperr_test.go:NN
-*errors.withStack: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f3
->>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f22
->>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f21
->>>>.../pperr_test.go:NN
-*fs.PathError: open not_found: no such file or directory
->>(no stack trace available)
-syscall.Errno: no such file or directory
->>(no stack trace available)
-`
+`, "\n")
 
 	assert.Equal(expected, actual)
 }
@@ -217,7 +216,7 @@ syscall.Errno: no such file or directory
 func TestCauseType(t *testing.T) {
 	assert := assert.New(t)
 	err := f1(true)
-	assert.Equal("*fs.PathError", pperr.CauseType(err))
+	assert.Equal("syscall.Errno", pperr.CauseType(err))
 }
 
 func TestCauseType_fundamental(t *testing.T) {
@@ -234,5 +233,5 @@ func TestCauseType_errorString(t *testing.T) {
 
 func TestCauseType_nil(t *testing.T) {
 	assert := assert.New(t)
-	assert.Equal("", pperr.CauseType(nil))
+	assert.Equal("<nil>", pperr.CauseType(nil))
 }

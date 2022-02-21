@@ -21,8 +21,6 @@ var DefaultPrinterWithIndent = func(w io.Writer, err error, frames, parent Frame
 			fmt.Fprintln(w, indent+f.Name)
 			fmt.Fprintf(w, "%s%s%s:%d\n", indent, indent, f.File, f.Line)
 		}
-	} else {
-		fmt.Fprintln(w, indent+"(no stack trace available)")
 	}
 }
 
