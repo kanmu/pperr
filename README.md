@@ -37,6 +37,14 @@ func f3() error {
 ```
 
 ```
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+	main.f3
+		/Users/.../main.go:25
+*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
+	main.f2
+		/Users/.../main.go:20
 *errors.withStack: from f1(): from f2(): from f3(): open not_found: no such file or directory
 	main.f1
 		/Users/.../main.go:16
@@ -46,14 +54,4 @@ func f3() error {
 		/usr/local/Cellar/go/1.17.6/libexec/src/runtime/proc.go:255
 	runtime.goexit
 		/usr/local/Cellar/go/1.17.6/libexec/src/runtime/asm_amd64.s:1581
-*errors.withStack: from f2(): from f3(): open not_found: no such file or directory
-	main.f2
-		/Users/.../main.go:20
-*errors.withStack: from f3(): open not_found: no such file or directory
-	main.f3
-		/Users/.../main.go:25
-*fs.PathError: open not_found: no such file or directory
-	(no stack trace available)
-syscall.Errno: no such file or directory
-	(no stack trace available)
 ```

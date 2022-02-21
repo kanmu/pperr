@@ -42,40 +42,46 @@ func fprintFuncWithParent(w io.Writer, err error, puts Printer, parent Frames) {
 		return
 	}
 
+	realErr := err
+	var frames Frames
+
 	if withStack, ok := err.(interface{ StackTrace() errors.StackTrace }); ok {
-		frames := ExtractFrames(withStack.StackTrace())
-		puts(w, err, frames, parent)
-		parent = frames
+		frames = ExtractFrames(withStack.StackTrace())
 
 		if withCause, ok := withStack.(interface{ Unwrap() error }); ok {
-			err = withCause.Unwrap()
+			realErr = withCause.Unwrap()
 		}
-	} else {
-		puts(w, err, nil, parent)
 	}
 
-	withCause, ok := err.(interface{ Unwrap() error })
+	if withCause, ok := realErr.(interface{ Unwrap() error }); ok {
+		var causeParent Frames
 
-	if !ok {
-		return
+		if frames != nil {
+			causeParent = frames
+		} else {
+			causeParent = parent
+		}
+
+		fprintFuncWithParent(w, withCause.Unwrap(), puts, causeParent)
 	}
 
-	fprintFuncWithParent(w, withCause.Unwrap(), puts, parent)
+	puts(w, err, frames, parent)
 }
 
 func CauseType(err error) string {
-	if err == nil {
-		return ""
-	}
+	for {
+		wrappedErr, ok := err.(interface{ Unwrap() error })
 
-	if ws, ok := err.(interface {
-		StackTrace() errors.StackTrace
-		Cause() error
-	}); ok {
-		if cause, ok := ws.Cause().(interface{ Cause() error }); ok {
-			return CauseType(cause.Cause())
+		if !ok {
+			return fmt.Sprintf("%T", err)
 		}
-	}
 
-	return fmt.Sprintf("%T", err)
+		cause := wrappedErr.Unwrap()
+
+		if cause == nil {
+			return fmt.Sprintf("%T", err)
+		}
+
+		err = cause
+	}
 }
