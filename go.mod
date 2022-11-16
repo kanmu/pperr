@@ -1,4 +1,4 @@
-module github.com/winebarrel/pperr
+module github.com/kanmu/pperr
 
 go 1.17
 
