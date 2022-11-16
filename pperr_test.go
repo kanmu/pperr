@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kanmu/pperr"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"github.com/winebarrel/pperr"
 	"golang.org/x/xerrors"
 )
 
@@ -58,23 +58,23 @@ func TestFprint(t *testing.T) {
 syscall.Errno: no such file or directory
 *fs.PathError: open not_found: no such file or directory
 *errors.withStack: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f3
+	github.com/kanmu/pperr_test.f3
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f23
+	github.com/kanmu/pperr_test.f23
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f22
+	github.com/kanmu/pperr_test.f22
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f21
+	github.com/kanmu/pperr_test.f21
 		.../pperr_test.go:NN
 *xerrors.wrapError: from f23: from f3(): open not_found: no such file or directory
 *fmt.wrapError: from f21(): from f23: from f3(): open not_found: no such file or directory
 *errors.withStack: from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f2
+	github.com/kanmu/pperr_test.f2
 		.../pperr_test.go:NN
 *errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f1
+	github.com/kanmu/pperr_test.f1
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.TestFprint
+	github.com/kanmu/pperr_test.TestFprint
 		.../pperr_test.go:NN
 	testing.tRunner
 		.../go/...:NN
@@ -121,23 +121,23 @@ func TestFprint_Indent(t *testing.T) {
 syscall.Errno: no such file or directory
 *fs.PathError: open not_found: no such file or directory
 *errors.withStack: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f3
+>>github.com/kanmu/pperr_test.f3
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f23
+>>github.com/kanmu/pperr_test.f23
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f22
+>>github.com/kanmu/pperr_test.f22
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f21
+>>github.com/kanmu/pperr_test.f21
 >>>>.../pperr_test.go:NN
 *xerrors.wrapError: from f23: from f3(): open not_found: no such file or directory
 *fmt.wrapError: from f21(): from f23: from f3(): open not_found: no such file or directory
 *errors.withStack: from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f2
+>>github.com/kanmu/pperr_test.f2
 >>>>.../pperr_test.go:NN
 *errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f1
+>>github.com/kanmu/pperr_test.f1
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.TestFprint_Indent
+>>github.com/kanmu/pperr_test.TestFprint_Indent
 >>>>.../pperr_test.go:NN
 >>testing.tRunner
 >>>>.../go/...:NN
@@ -162,23 +162,23 @@ func TestSprint(t *testing.T) {
 syscall.Errno: no such file or directory
 *fs.PathError: open not_found: no such file or directory
 *errors.withStack: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f3
+	github.com/kanmu/pperr_test.f3
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f23
+	github.com/kanmu/pperr_test.f23
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f22
+	github.com/kanmu/pperr_test.f22
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.f21
+	github.com/kanmu/pperr_test.f21
 		.../pperr_test.go:NN
 *xerrors.wrapError: from f23: from f3(): open not_found: no such file or directory
 *fmt.wrapError: from f21(): from f23: from f3(): open not_found: no such file or directory
 *errors.withStack: from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f2
+	github.com/kanmu/pperr_test.f2
 		.../pperr_test.go:NN
 *errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
-	github.com/winebarrel/pperr_test.f1
+	github.com/kanmu/pperr_test.f1
 		.../pperr_test.go:NN
-	github.com/winebarrel/pperr_test.TestSprint
+	github.com/kanmu/pperr_test.TestSprint
 		.../pperr_test.go:NN
 	testing.tRunner
 		.../go/...:NN
@@ -203,23 +203,23 @@ func TestSprintFunc(t *testing.T) {
 syscall.Errno: no such file or directory
 *fs.PathError: open not_found: no such file or directory
 *errors.withStack: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f3
+>>github.com/kanmu/pperr_test.f3
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f23
+>>github.com/kanmu/pperr_test.f23
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f22
+>>github.com/kanmu/pperr_test.f22
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.f21
+>>github.com/kanmu/pperr_test.f21
 >>>>.../pperr_test.go:NN
 *xerrors.wrapError: from f23: from f3(): open not_found: no such file or directory
 *fmt.wrapError: from f21(): from f23: from f3(): open not_found: no such file or directory
 *errors.withStack: from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f2
+>>github.com/kanmu/pperr_test.f2
 >>>>.../pperr_test.go:NN
 *errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
->>github.com/winebarrel/pperr_test.f1
+>>github.com/kanmu/pperr_test.f1
 >>>>.../pperr_test.go:NN
->>github.com/winebarrel/pperr_test.TestSprintFunc
+>>github.com/kanmu/pperr_test.TestSprintFunc
 >>>>.../pperr_test.go:NN
 >>testing.tRunner
 >>>>.../go/...:NN

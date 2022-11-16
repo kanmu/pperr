@@ -2,8 +2,8 @@
 
 Pretty print for [pkg/errors](https://github.com/pkg/errors).
 
-[![Build](https://github.com/winebarrel/pperr/actions/workflows/build.yml/badge.svg)](https://github.com/winebarrel/pperr/actions/workflows/build.yml)
-[![GoDoc](https://godoc.org/github.com/winebarrel/pperr?status.svg)](http://godoc.org/github.com/winebarrel/pperr)
+[![Build](https://github.com/kanmu/pperr/actions/workflows/build.yml/badge.svg)](https://github.com/kanmu/pperr/actions/workflows/build.yml)
+[![GoDoc](https://godoc.org/github.com/kanmu/pperr?status.svg)](http://godoc.org/github.com/kanmu/pperr)
 
 # Usage
 
@@ -13,8 +13,8 @@ package pperr
 import (
 	"os"
 
+	"github.com/kanmu/pperr"
 	"github.com/pkg/errors"
-	"github.com/winebarrel/pperr"
 )
 
 func main() {
