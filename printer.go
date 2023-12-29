@@ -24,6 +24,19 @@ var DefaultPrinterWithIndent = func(w io.Writer, err error, frames, parent Frame
 	}
 }
 
+var PrinterWithoutMessage = func(w io.Writer, err error, frames, parent Frames) {
+	if frames != nil {
+		if parent != nil {
+			frames = frames.Exclude(parent)
+		}
+
+		for _, f := range frames {
+			fmt.Fprintln(w, f.Name)
+			fmt.Fprintf(w, "\t%s:%d\n", f.File, f.Line)
+		}
+	}
+}
+
 var DefaultPrinter Printer = func(w io.Writer, err error, frames, parent Frames) {
 	DefaultPrinterWithIndent(w, err, frames, parent, DefaultIndent)
 }
