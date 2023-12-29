@@ -252,3 +252,39 @@ func TestCauseType_nil(t *testing.T) {
 	assert := assert.New(t)
 	assert.Equal("<nil>", pperr.CauseType(nil))
 }
+
+func TestFprint_WithoutMessage(t *testing.T) {
+	assert := assert.New(t)
+
+	var buf strings.Builder
+	err := f1(true)
+	pperr.FprintFunc(&buf, err, pperr.PrinterWithoutMessage)
+
+	actual := buf.String()
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
+
+	expected := strings.TrimPrefix(`
+github.com/kanmu/pperr_test.f3
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.f23
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.f22
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.f21
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.f2
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.f1
+	.../pperr_test.go:NN
+github.com/kanmu/pperr_test.TestFprint_WithoutMessage
+	.../pperr_test.go:NN
+testing.tRunner
+	.../go/...:NN
+runtime.goexit
+	.../go/...:NN
+`, "\n")
+
+	assert.Equal(expected, actual)
+}
