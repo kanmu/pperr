@@ -36,7 +36,7 @@ func ExtractFrames(st errors.StackTrace) Frames {
 }
 
 func (frames Frames) Exclude(excludes Frames) Frames {
-	newFrames := Frames{}
+	newFrames := make(Frames, 0, len(frames))
 
 L1:
 	for _, f := range frames {
