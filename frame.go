@@ -6,6 +6,27 @@ import (
 	"github.com/pkg/errors"
 )
 
+type ErrorSets []ErrorSet
+
+func (es ErrorSets) TopFrame() *Frame {
+	if len(es) == 0 {
+		return nil
+	} else if len(es[0].Frames) == 0 {
+		return nil
+	}
+
+	top := es[0].Frames
+
+	if p := es[0].Parent; p != nil {
+		top = top.Exclude(p)
+	}
+	if len(top) == 0 {
+		return nil
+	}
+
+	return top[0]
+}
+
 type ErrorSet struct {
 	Error  error
 	Frames Frames
