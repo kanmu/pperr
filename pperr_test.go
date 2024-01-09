@@ -50,8 +50,8 @@ func TestFprint(t *testing.T) {
 	pperr.Fprint(&buf, err)
 
 	actual := buf.String()
-	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := strings.TrimPrefix(`
@@ -113,8 +113,8 @@ func TestFprint_Indent(t *testing.T) {
 	pperr.FprintFunc(&buf, err, pperr.NewPrinterWithIndent(">>"))
 
 	actual := buf.String()
-	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := strings.TrimPrefix(`
@@ -154,8 +154,8 @@ func TestSprint(t *testing.T) {
 	err := f1(true)
 	actual := pperr.Sprint(err)
 
-	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := strings.TrimPrefix(`
@@ -195,8 +195,8 @@ func TestSprintFunc(t *testing.T) {
 	err := f1(true)
 	actual := pperr.SprintFunc(err, pperr.NewPrinterWithIndent(">>"))
 
-	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := strings.TrimPrefix(`
@@ -261,8 +261,8 @@ func TestFprint_WithoutMessage(t *testing.T) {
 	pperr.FprintFunc(&buf, err, pperr.PrinterWithoutMessage)
 
 	actual := buf.String()
-	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
 	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
 
 	expected := strings.TrimPrefix(`
