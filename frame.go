@@ -6,6 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+type ErrorSet struct {
+	Error  error
+	Frames Frames
+	Parent Frames
+}
+
 type Frame struct {
 	File string
 	Line int
@@ -36,7 +42,7 @@ func ExtractFrames(st errors.StackTrace) Frames {
 }
 
 func (frames Frames) Exclude(excludes Frames) Frames {
-	newFrames := Frames{}
+	newFrames := make(Frames, 0, len(frames))
 
 L1:
 	for _, f := range frames {

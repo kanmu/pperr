@@ -24,7 +24,7 @@ var DefaultPrinterWithIndent = func(w io.Writer, err error, frames, parent Frame
 	}
 }
 
-var PrinterWithoutMessage = func(w io.Writer, err error, frames, parent Frames) {
+var PrinterWithoutMessage = func(w io.Writer, _ error, frames, parent Frames) {
 	if frames != nil {
 		if parent != nil {
 			frames = frames.Exclude(parent)
