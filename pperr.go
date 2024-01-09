@@ -34,16 +34,16 @@ func Fprint(w io.Writer, err error) {
 }
 
 func FprintFunc(w io.Writer, err error, puts Printer) {
-	for _, e := range extractErrorSet(err, nil) {
+	for _, e := range extractErrorSets(err, nil) {
 		puts(w, e.Error, e.Frames, e.Parent)
 	}
 }
 
-func ExtractErrorSet(err error) []ErrorSet {
-	return extractErrorSet(err, nil)
+func ExtractErrorSets(err error) ErrorSets {
+	return extractErrorSets(err, nil)
 }
 
-func extractErrorSet(err error, parent Frames) []ErrorSet {
+func extractErrorSets(err error, parent Frames) []ErrorSet {
 	if err == nil {
 		return nil
 	}
@@ -70,7 +70,7 @@ func extractErrorSet(err error, parent Frames) []ErrorSet {
 			causeParent = parent
 		}
 
-		if es := extractErrorSet(withCause.Unwrap(), causeParent); es != nil {
+		if es := extractErrorSets(withCause.Unwrap(), causeParent); es != nil {
 			errs = es
 		}
 	}

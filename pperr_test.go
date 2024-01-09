@@ -42,13 +42,13 @@ func f3(native bool) error {
 	}
 }
 
-func TestExtractErrorSet(t *testing.T) {
+func TestExtractErrorSets(t *testing.T) {
 	assert := assert.New(t)
 
 	err := f1(true)
 
 	var buf strings.Builder
-	for _, e := range pperr.ExtractErrorSet(err) {
+	for _, e := range pperr.ExtractErrorSets(err) {
 		pperr.DefaultPrinter(&buf, e.Error, e.Frames, e.Parent)
 	}
 	actual := buf.String()
@@ -76,7 +76,7 @@ syscall.Errno: no such file or directory
 *errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
 	github.com/kanmu/pperr_test.f1
 		.../pperr_test.go:NN
-	github.com/kanmu/pperr_test.TestExtractErrorSet
+	github.com/kanmu/pperr_test.TestExtractErrorSets
 		.../pperr_test.go:NN
 	testing.tRunner
 		.../go/...:NN
