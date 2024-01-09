@@ -34,12 +34,18 @@ func Fprint(w io.Writer, err error) {
 }
 
 func FprintFunc(w io.Writer, err error, puts Printer) {
-	fprintFuncWithParent(w, err, puts, nil)
+	for _, e := range extractErrorSet(err, nil) {
+		puts(w, e.Error, e.Frames, e.Parent)
+	}
 }
 
-func fprintFuncWithParent(w io.Writer, err error, puts Printer, parent Frames) {
+func ExtractErrorSet(err error) []ErrorSet {
+	return extractErrorSet(err, nil)
+}
+
+func extractErrorSet(err error, parent Frames) []ErrorSet {
 	if err == nil {
-		return
+		return nil
 	}
 
 	realErr := err
@@ -53,6 +59,8 @@ func fprintFuncWithParent(w io.Writer, err error, puts Printer, parent Frames) {
 		}
 	}
 
+	var errs []ErrorSet
+
 	if withCause, ok := realErr.(interface{ Unwrap() error }); ok {
 		var causeParent Frames
 
@@ -62,10 +70,14 @@ func fprintFuncWithParent(w io.Writer, err error, puts Printer, parent Frames) {
 			causeParent = parent
 		}
 
-		fprintFuncWithParent(w, withCause.Unwrap(), puts, causeParent)
+		if es := extractErrorSet(withCause.Unwrap(), causeParent); es != nil {
+			errs = es
+		}
 	}
 
-	puts(w, err, frames, parent)
+	errs = append(errs, ErrorSet{Error: err, Frames: frames, Parent: parent})
+
+	return errs
 }
 
 func CauseType(err error) string {

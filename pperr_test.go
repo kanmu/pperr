@@ -42,6 +42,51 @@ func f3(native bool) error {
 	}
 }
 
+func TestExtractErrorSet(t *testing.T) {
+	assert := assert.New(t)
+
+	err := f1(true)
+
+	var buf strings.Builder
+	for _, e := range pperr.ExtractErrorSet(err) {
+		pperr.DefaultPrinter(&buf, e.Error, e.Frames, e.Parent)
+	}
+	actual := buf.String()
+	actual = regexp.MustCompile(`(?m)[^\s>]+/pperr_test.go:\d+$`).ReplaceAllString(actual, ".../pperr_test.go:NN")
+	actual = regexp.MustCompile(`(?m)[^\s>]+/go/.*:\d+$`).ReplaceAllString(actual, ".../go/...:NN")
+	actual = regexp.MustCompile(`(?m):\d+$`).ReplaceAllString(actual, ":NN")
+
+	expected := strings.TrimPrefix(`
+syscall.Errno: no such file or directory
+*fs.PathError: open not_found: no such file or directory
+*errors.withStack: from f3(): open not_found: no such file or directory
+	github.com/kanmu/pperr_test.f3
+		.../pperr_test.go:NN
+	github.com/kanmu/pperr_test.f23
+		.../pperr_test.go:NN
+	github.com/kanmu/pperr_test.f22
+		.../pperr_test.go:NN
+	github.com/kanmu/pperr_test.f21
+		.../pperr_test.go:NN
+*xerrors.wrapError: from f23: from f3(): open not_found: no such file or directory
+*fmt.wrapError: from f21(): from f23: from f3(): open not_found: no such file or directory
+*errors.withStack: from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
+	github.com/kanmu/pperr_test.f2
+		.../pperr_test.go:NN
+*errors.withStack: from f1(): from f2(): from f21(): from f23: from f3(): open not_found: no such file or directory
+	github.com/kanmu/pperr_test.f1
+		.../pperr_test.go:NN
+	github.com/kanmu/pperr_test.TestExtractErrorSet
+		.../pperr_test.go:NN
+	testing.tRunner
+		.../go/...:NN
+	runtime.goexit
+		.../go/...:NN
+`, "\n")
+
+	assert.Equal(expected, actual)
+}
+
 func TestFprint(t *testing.T) {
 	assert := assert.New(t)
 

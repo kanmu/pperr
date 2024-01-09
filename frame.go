@@ -6,6 +6,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+type ErrorSet struct {
+	Error  error
+	Frames Frames
+	Parent Frames
+}
+
 type Frame struct {
 	File string
 	Line int
